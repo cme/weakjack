@@ -134,6 +134,11 @@ int have_libjack(void);
 #define jack_midi_event_get                 WJACK_midi_event_get
 #define jack_midi_event_write               WJACK_midi_event_write
 #define jack_midi_clear_buffer              WJACK_midi_clear_buffer
+#define jack_midi_reset_buffer              WJACK_midi_reset_buffer
+#define jack_midi_max_event_size            WJACK_midi_max_event_size
+#define jack_midi_event_reserve             WJACK_midi_event_reserve
+#define jack_midi_get_lost_event_count      WJACK_midi_get_lost_event_count
+
 
 /* <jack/session.h> */
 #define jack_set_session_callback           WJACK_set_session_callback
