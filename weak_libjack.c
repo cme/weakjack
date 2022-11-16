@@ -72,6 +72,21 @@ typedef void * __attribute__ ((__may_alias__)) pvoid_t;
 	}
 #endif
 
+#if defined NDEBUG
+#define MAPVAR(SYM, FAIL)							\
+	WJACK_ ## SYM = lib_symbol(lib, "JACK_" #SYM);	\
+	if (!WJACK_ ## SYM) err |= FAIL;
+#else
+#define MAPVAR(SYM, FAIL)												\
+	WJACK_ ## SYM = lib_symbol(lib, "JACK_" # SYM);						\
+    if (!WJACK_ ## SYM) {												\
+		if (FAIL) {														\
+			fprintf(stderr, "*** WEAK-JACK: required symbol '%s' was not found\n", "" #SYM); \
+		}																\
+		err |= FAIL;													\
+	}
+#endif
+
 typedef void (* func_t) (void);
 
 /* function pointers to the real jack API */
@@ -82,6 +97,7 @@ static struct WeakJack {
 #define JPFUN(ERR, RTYPE, NAME, DEF, ARGS, RVAL)   func_t _ ## NAME ;
 #define JXFUN(ERR, RTYPE, NAME, DEF, ARGS, CODE)   func_t _ ## NAME ;
 #define JVFUN(ERR, NAME, DEF, ARGS, CODE)          func_t _ ## NAME ;
+#define JVAR(ERR, TYPE, NAME)
 
 #include "weak_libjack.def"
 
@@ -89,7 +105,25 @@ static struct WeakJack {
 #undef JPFUN
 #undef JXFUN
 #undef JVFUN
+#undef JVAR
 } _j;
+
+// JACK variables at global scope
+#define JCFUN(ERR, RTYPE, NAME, RVAL)
+#define JPFUN(ERR, RTYPE, NAME, DEF, ARGS, RVAL)
+#define JXFUN(ERR, RTYPE, NAME, DEF, ARGS, CODE)
+#define JVFUN(ERR, NAME, DEF, ARGS, CODE)
+#define JVAR(ERR, TYPE, NAME)                           TYPE * WJACK_ ## NAME ;
+
+#include "weak_libjack.def"
+
+#undef JCFUN
+#undef JPFUN
+#undef JXFUN
+#undef JVFUN
+#undef JVAR
+
+
 
 static int _status = -1;
 #if !defined _MSC_VER || defined __INTEL_COMPILER
@@ -107,6 +141,7 @@ static void init_weak_jack(void)
 
 #ifdef __APPLE__
 	lib = lib_open("libjack.dylib");
+	lib = 0;
 	if (!lib) {
 		lib = lib_open("/usr/local/lib/libjack.dylib");
 	}
@@ -149,6 +184,7 @@ static void init_weak_jack(void)
 #define JPFUN(ERR, RTYPE, NAME, DEF, ARGS, RVAL)  MAPSYM(NAME, ERR)
 #define JXFUN(ERR, RTYPE, NAME, DEF, ARGS, CODE)  MAPSYM(NAME, ERR)
 #define JVFUN(ERR, NAME, DEF, ARGS, CODE)         MAPSYM(NAME, ERR)
+#define JVAR(ERR, TYPE, NAME)                     MAPVAR(NAME, ERR)
 
 #include "weak_libjack.def"
 
@@ -156,6 +192,7 @@ static void init_weak_jack(void)
 #undef JPFUN
 #undef JXFUN
 #undef JVFUN
+#undef JVAR
 
 	/* if a required symbol is not found, disable JACK completly */
 	if (err) {
@@ -279,11 +316,14 @@ jack_client_t * WJACK_no_client_open (const char *client_name, jack_options_t op
 		} \
 	}
 
+#define JVAR(ERR, TYPE, SYM)
+
 #include "weak_libjack.def"
 
 #undef JCFUN
 #undef JPFUN
 #undef JXFUN
 #undef JVFUN
+#undef JVAR
 
 #endif // end USE_WEAK_JACK

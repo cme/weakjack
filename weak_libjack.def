@@ -173,6 +173,17 @@ JPFUN(0, int,            remove_property, (jack_client_t* c, jack_uuid_t s, cons
 JPFUN(0, int,            remove_properties, (jack_client_t* c, jack_uuid_t s), (c,s), -1)
 JPFUN(0, int,            remove_all_properties, (jack_client_t* c), (c), -1)
 JPFUN(0, int,            set_property_change_callback, (jack_client_t *c, JackPropertyChangeCallback s, void *a), (c,s,a), -1)
+
+JVAR(0, const char *, METADATA_CONNECTED)
+JVAR(0, const char *, METADATA_EVENT_TYPES)
+JVAR(0, const char *, METADATA_HARDWARE)
+JVAR(0, const char *, METADATA_ICON_LARGE)
+JVAR(0, const char *, METADATA_ICON_NAME)
+JVAR(0, const char *, METADATA_ICON_SMALL)
+JVAR(0, const char *, METADATA_ORDER)
+JVAR(0, const char *, METADATA_PRETTY_NAME)
+JVAR(0, const char *, METADATA_PORT_GROUP)
+JVAR(0, const char *, METADATA_SIGNAL_TYPE)
 #endif
 
 /* <jack/statistics.h> */

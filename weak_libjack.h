@@ -139,7 +139,6 @@ int have_libjack(void);
 #define jack_midi_event_reserve             WJACK_midi_event_reserve
 #define jack_midi_get_lost_event_count      WJACK_midi_get_lost_event_count
 
-
 /* <jack/session.h> */
 #define jack_set_session_callback           WJACK_set_session_callback
 #define jack_session_reply                  WJACK_session_reply
@@ -187,6 +186,24 @@ int have_libjack(void);
 #define jack_remove_properties              WJACK_remove_properties
 #define jack_remove_all_properties          WJACK_remove_all_properties
 #define jack_set_property_change_callback   WJACK_set_property_change_callback
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+extern const char ** WJACK_METADATA_CONNECTED;
+extern const char ** WJACK_METADATA_EVENT_TYPES;
+extern const char ** WJACK_METADATA_HARDWARE;
+extern const char ** WJACK_METADATA_ICON_LARGE;
+extern const char ** WJACK_METADATA_ICON_NAME;
+extern const char ** WJACK_METADATA_ICON_SMALL;
+extern const char ** WJACK_METADATA_ORDER;
+extern const char ** WJACK_METADATA_PRETTY_NAME;
+extern const char ** WJACK_METADATA_PORT_GROUP;
+extern const char ** WJACK_METADATA_SIGNAL_TYPE;
+#ifdef __cplusplus
+}
+#endif
+
 #endif
 
 /* <jack/statistics.h> */
@@ -206,6 +223,20 @@ int have_libjack(void);
 
 #ifndef NO_JACK_METADATA
 #include <jack/metadata.h>
+
+
+#define JACK_METADATA_CONNECTED   (*(WJACK_METADATA_CONNECTED))
+#define JACK_METADATA_EVENT_TYPES (*(WJACK_METADATA_EVENT_TYPES))
+#define JACK_METADATA_HARDWARE    (*(WJACK_METADATA_HARDWARE))
+#define JACK_METADATA_ICON_LARGE  (*(WJACK_METADATA_ICON_LARGE))
+#define JACK_METADATA_ICON_NAME   (*(WJACK_METADATA_ICON_NAME))
+#define JACK_METADATA_ICON_SMALL  (*(WJACK_METADATA_ICON_SMALL))
+#define JACK_METADATA_ORDER       (*(WJACK_METADATA_ORDER))
+#define JACK_METADATA_PRETTY_NAME (*(WJACK_METADATA_PRETTY_NAME))
+#define JACK_METADATA_PORT_GROUP  (*(WJACK_METADATA_PORT_GROUP))
+#define JACK_METADATA_SIGNAL_TYPE (*(WJACK_METADATA_SIGNAL_TYPE))
+
+
 #endif
 
 #ifdef USE_WEAK_JACK
